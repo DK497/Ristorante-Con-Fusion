@@ -139,3 +139,36 @@ export const promadd=(prom)=>({
     type:Actiontypes.PROMOS_ADDED,
     payload:prom
 })
+
+
+export const fetchleader=()=>(dispatch)=>{
+    dispatch(leaderloading(true))
+    
+    return fetch(baseUrl+'leaders')
+            .then(res=>{
+            if(res.ok){return res}
+            else {
+                 var err=new Error('Error'+res.status+':'+res.statusText)
+                 err.response=res
+                  throw err
+                 }
+                 },err=>{
+                var errmss=new Error(err.message)
+                throw errmss
+                })
+            .then(res=>res.json())
+            .then(lead=>dispatch(leaderadd(lead)))
+            .catch(error=>dispatch(leaderfailed(error.message)))
+
+}
+export const leaderloading=()=>({
+    type:Actiontypes.LEADER_LOADING
+})
+export const leaderfailed=(errmss)=>({
+    type:Actiontypes.LEADER_FAILED,
+    payload:errmss
+})
+export const leaderadd=(lead)=>({
+    type:Actiontypes.LEADER_ADDED,
+    payload:lead
+})

@@ -20,7 +20,9 @@ function Homecom(props) {
 
                 </div>
                 <div className='col-12 col-md m-1'>
-                  <Rendercard item={props.lead}/>
+                  <Rendercard item={props.lead}
+                                   isload={props.leadload}
+                                   err={props.leaderr}/>
 
                 </div>
             </div>

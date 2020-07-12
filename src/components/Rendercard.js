@@ -9,7 +9,8 @@ function Rendercard({item,isload,err}) {
     if(isload){
         return (<div className='container'>
             <div className='row'>
-               <Loadingcomp/>
+               <Loadingcomp />
+               
             </div>
         </div>)
       }

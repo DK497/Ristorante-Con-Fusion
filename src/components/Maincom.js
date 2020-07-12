@@ -8,7 +8,7 @@ import About from './About';
 import {Switch,Route,Redirect,withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import Contactrdx from './Contactrdx';
-import {postcomment,fetchdish,fetchcomment,fetchprom} from '../redux/Actioncreator'
+import {postcomment,fetchdish,fetchcomment,fetchprom,fetchleader} from '../redux/Actioncreator'
 import {actions} from 'react-redux-form'
 import  {TransitionGroup,CSSTransition} from 'react-transition-group'
 
@@ -24,7 +24,10 @@ const mapDispatchToProps=(dispatch)=>{
     fdish:()=>{ dispatch(fetchdish())},
     resetfeed:()=>{dispatch(actions.reset('feedback'))},
     fcomment:()=>{ dispatch(fetchcomment())},
-    fprom:()=>{ dispatch(fetchprom())}
+    fprom:()=>{ dispatch(fetchprom())},
+    fleader:()=>{ dispatch(fetchleader())}
+    
+
   }
 }//Action creator returns an action object to dispatcher which we are
 // supplying 
@@ -34,17 +37,23 @@ export class Maincom extends Component {
   componentDidMount(){
     this.props.fdish()
     this.props.fcomment()
-    this.props.fprom()}
+    this.props.fprom()
+    this.props.fleader()
+
+  }
   
   render() {
     const {dis,prom,lead,com,addcom}=this.props
+
     const Homepage=()=><Homecom dis={dis.dishes.filter((d)=>d.featured===true)[0]}
                         dishload={dis.isloading}
                         disherr={dis.errmss}
     prom={prom.promos.filter((d)=>d.featured===true)[0]}
     promload={prom.isloading}
     promerr={prom.errmss}
-    lead={lead.filter((d)=>d.featured===true)[0]}/>
+    lead={lead.leader.filter((d)=>d.featured===true)[0]}
+    leadload={lead.isloading}
+    leaderr={lead.errmss}/>
 
     const dwithid=({match})=>{
       return(
@@ -72,7 +81,7 @@ export class Maincom extends Component {
            component={()=><Contactrdx reset={this.props.resetfeed}/>}/>
 
            <Route exact path='/about' 
-           component={()=><About leaders={lead}/>}/>
+           component={()=><About lead={lead}/>}/>
            <Redirect to='/home'/>
          </Switch>
          </CSSTransition>
