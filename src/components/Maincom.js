@@ -8,7 +8,7 @@ import About from './About';
 import {Switch,Route,Redirect,withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import Contactrdx from './Contactrdx';
-import {postcomment,fetchdish,fetchcomment,fetchprom,fetchleader} from '../redux/Actioncreator'
+import {postcomment,fetchdish,fetchcomment,fetchprom,fetchleader,postfeedback} from '../redux/Actioncreator'
 import {actions} from 'react-redux-form'
 import  {TransitionGroup,CSSTransition} from 'react-transition-group'
 
@@ -25,8 +25,8 @@ const mapDispatchToProps=(dispatch)=>{
     resetfeed:()=>{dispatch(actions.reset('feedback'))},
     fcomment:()=>{ dispatch(fetchcomment())},
     fprom:()=>{ dispatch(fetchprom())},
-    fleader:()=>{ dispatch(fetchleader())}
-    
+    fleader:()=>{ dispatch(fetchleader())},
+    postfeedback:(fn,ln,num,email,ct,mess,agree )=>dispatch(postfeedback(fn,ln,num,email,ct,mess,agree))
 
   }
 }//Action creator returns an action object to dispatcher which we are
@@ -43,7 +43,7 @@ export class Maincom extends Component {
   }
   
   render() {
-    const {dis,prom,lead,com,addcom}=this.props
+    const {dis,prom,lead,com,addcom,postfeedback}=this.props
 
     const Homepage=()=><Homecom dis={dis.dishes.filter((d)=>d.featured===true)[0]}
                         dishload={dis.isloading}
@@ -64,6 +64,9 @@ export class Maincom extends Component {
       )//using this function addcom we can dispatch action to store
       //as now I have access to comment that the use just submited
     }
+    const contacthandle=()=>{
+     return ( <Contactrdx postfeed={postfeedback}  reset={this.props.resetfeed} />)
+    }
     return (
     <div >
      <Headercomp/>
@@ -77,8 +80,7 @@ export class Maincom extends Component {
            component={()=><Menucomp d ={dis}/>}/>
            <Route path='/menu/:d' component={dwithid}/>
 
-           <Route exact path='/contact' 
-           component={()=><Contactrdx reset={this.props.resetfeed}/>}/>
+           <Route exact path='/contact' component={contacthandle}/>
 
            <Route exact path='/about' 
            component={()=><About lead={lead}/>}/>

@@ -172,3 +172,46 @@ export const leaderadd=(lead)=>({
     type:Actiontypes.LEADER_ADDED,
     payload:lead
 })
+
+export const postfeedback=(fn,ln,num,email,ct,mess,agree)=>(dispatch)=>{
+    const newfeed = {
+       firstname:fn,
+       lastname:ln,
+       telnum:num,
+       email:email,
+       agree:agree,
+       contactType:ct,
+       message:mess
+    }
+    newfeed.date=new Date().toISOString()
+   
+return fetch(baseUrl+'feedback',{
+        method:'POST',
+        body:JSON.stringify(newfeed),
+        headers:{
+            'Content-Type':'application/json'
+        },
+        credentials:'same-origin'
+    }).then(res=>{
+        if(res.ok)
+        {return res}
+        else {
+             var err=new Error('Error'+res.status+':'+res.statusText)
+             err.res=res
+              throw err
+             }
+             },err=>{
+            var errmss=new Error(err.message)
+            throw errmss
+            }).then(res=>res.json())
+            .then(feed=>dispatch(printfeedback(feed)))
+            .catch(error=>{ console.log('post feed', error.message)
+
+             })
+}
+
+
+export const printfeedback=(feed)=>{   
+    alert('New values are :'+JSON.stringify(feed))
+    
+}
